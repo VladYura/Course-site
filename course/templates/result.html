@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="{% static 'js/ECOTree.js' %}"></script>
+    <link type="text/css" rel="style-sheet" href="{% static 'css/ECOTree.css' %}"/>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <style>
+        .index {
+            font-size: 10px;
+        }
+
+        .big-index {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div style="display: flex; justify-content: center; flex-direction: column; align-items: center">
+    <table border="1" cellpadding="10px" style="margin: 10px 0 auto" class="table-bordered">
+        <caption><h2>Таблица исходного дерева</h2></caption>
+        <tr align="center" bgcolor="#7fffd4">
+            <th>a</th>
+            {% for key, value in first_table.items %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        <tr align="center">
+            <th bgcolor="#7fffd4">Z1</th>
+            {% for key1, value1 in first_table.items %}
+                {% for key, value in value1.items %}
+                    <td>{{ key }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+        <tr align="center">
+            <th bgcolor="#7fffd4">Z2</th>
+            {% for key1, value1 in first_table.items %}
+                {% for key, value in value1.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    </table>
+    {% for table in all_table %}
+        <table border="1" cellpadding="10px" style="margin: 50px 0 auto" class="table-bordered">
+            <caption><h2>Сокращение номер {{ forloop.counter }}</h2></caption>
+            <tr align="center" bgcolor="#7fffd4">
+                <th>Group</th>
+                {% for key, value in table.items %}
+                    <th colspan="{{ value|length }}">{{ key }}</th>
+                {% endfor %}
+            </tr>
+            <tr align="center" bgcolor="#7fffd4">
+                <th>A</th>
+                {% for key1, value1 in table.items %}
+                    {% for key, value in value1.items %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+            <tr align="center">
+                <th bgcolor="#7fffd4">Z1</th>
+                {% for key2, value2 in table.items %}
+                    {% for key1, value1 in value2.items %}
+                        {% for key, value in value1.items %}
+                            <td>{{ key }}</td>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+            <tr align="center">
+                <th bgcolor="#7fffd4">Z2</th>
+                {% for key2, value2 in table.items %}
+                    {% for key1, value1 in value2.items %}
+                        {% for key, value in value1.items %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+        </table>
+    {% endfor %}
+    <table border="1" cellpadding="10px" style="margin: 30px 0 auto" class="table-bordered">
+        <caption><h2>Таблица сокращённого дерева</h2></caption>
+        <tr align="center" bgcolor="#7fffd4">
+            <th>a</th>
+            {% for key, value in last_table.items %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        <tr align="center">
+            <th bgcolor="#7fffd4">Z1</th>
+            {% for key1, value1 in last_table.items %}
+                {% for key, value in value1.items %}
+                    <td>{{ key }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+        <tr align="center">
+            <th bgcolor="#7fffd4">Z2</th>
+            {% for key1, value1 in last_table.items %}
+                {% for key, value in value1.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    </table>
+    <table border="1" cellpadding="10px" style="margin: 50px 0 auto" class="table-bordered">
+        <caption><h2>Таблица определения выходов триггеров</h2></caption>
+        <tr align="center" bgcolor="#7fffd4">
+            <th>a<span class="index">(t)</span></th>
+            <th>a<span class="index">(t + 1)</span></th>
+            <th>a<span class="index">(t + 1)</span></th>
+            {% for i in length_q %}
+                <th colspan="2">x = 0</th>
+                <th colspan="2">x = 1</th>
+            {% endfor %}
+        </tr>
+        <tr align="center" bgcolor="#7fffd4">
+            <th rowspan="2">
+                {% for i in length_q %}
+                    Q<span class="index">{{ i }}</span>
+                {% endfor %}
+            </th>
+            <th>x = 0</th>
+            <th>x = 1</th>
+            {% for i in length_q %}
+                {% for j in '12' %}
+                    <th rowspan="2">
+                        J<span class="index">{{ i }}</span>
+                    </th>
+                    <th rowspan="2">
+                        K<span class="index">{{ i }}</span>
+                    </th>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+        <tr align="center" bgcolor="#7fffd4">
+            {% for j in '12' %}
+                <th>
+                    {% for i in length_q %}
+                        Q<span class="index">{{ i }}</span>
+                    {% endfor %}
+                </th>
+            {% endfor %}
+        </tr>
+        {% for lst in finish_jump_table %}
+            <tr align="center">
+                {% for item in lst %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div style="display: flex; justify-content: center">
+    <div style="width: 80%">
+        {# Карта Карно на 4 переменные #}
+        {% if type_of_map %}
+            {% for lst in maps_carno %}
+                <div style="display: flex; justify-content: space-around">
+                    {% for element in lst %}
+                        <table border="1" style="margin-top: 50px" class="table-bordered">
+                            <caption>
+                                <h3>
+                                    {% if forloop.counter == 1 %}
+                                        Карта Карно для J
+                                        <span class="big-index">{{ forloop.parentloop.revcounter }}</span>
+                                    {% else %}
+                                        Карта Карно для K
+                                        <span class="big-index">{{ forloop.parentloop.revcounter }}</span>
+                                    {% endif %}
+                                </h3>
+                            </caption>
+                            <tr align="center" bgcolor="#7fffd4">
+                                <th>Q<span class="index">2</span> Q<span class="index">1</span></th>
+                                <th rowspan="2">0 0</th>
+                                <th rowspan="2">0 1</th>
+                                <th rowspan="2">1 1</th>
+                                <th rowspan="2">1 0</th>
+                            </tr>
+                            <tr align="center" bgcolor="#7fffd4">
+                                <th>X Q<span class="index">3</span></th>
+                            </tr>
+                            {% for row in element %}
+                                <tr align="center">
+                                    {% if forloop.counter == 1 %}
+                                        <th bgcolor="#7fffd4">0 0</th>
+                                    {% elif forloop.counter == 2 %}
+                                        <th bgcolor="#7fffd4">0 1</th>
+                                    {% elif forloop.counter == 3 %}
+                                        <th bgcolor="#7fffd4">1 1</th>
+                                    {% elif forloop.counter == 4 %}
+                                        <th bgcolor="#7fffd4">1 0</th>
+                                    {% endif %}
+                                    {% for el in row %}
+                                        <td align="center">{{ el }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            {# Карта Карно на 5 переменных #}
+            {% for lst in maps_carno %}
+                <div style="display: flex; justify-content: space-around">
+                    {% for element in lst %}
+                        <table border="1" style="margin-top: 50px" class="table-bordered">
+                            <caption>
+                                <h3>
+                                    {% if forloop.counter == 1 %}
+                                        Карта Карно для J{{ forloop.parentloop.revcounter }}
+                                    {% else %}
+                                        Карта Карно для K{{ forloop.parentloop.revcounter }}
+                                    {% endif %}
+                                </h3>
+                            </caption>
+                            <tr align="center" bgcolor="#7fffd4">
+                                <th>Q3 Q2 Q1</th>
+                                <th rowspan="2">0 0 0</th>
+                                <th rowspan="2">0 0 1</th>
+                                <th rowspan="2">0 1 1</th>
+                                <th rowspan="2">0 1 0</th>
+                                <th rowspan="2">1 1 0</th>
+                                <th rowspan="2">1 1 1</th>
+                                <th rowspan="2">1 0 1</th>
+                                <th rowspan="2">1 0 0</th>
+                            </tr>
+                            <tr align="center" bgcolor="#7fffd4">
+                                <th>X Q4</th>
+                            </tr>
+                            {% for row in element %}
+                                <tr align="center">
+                                    {% if forloop.counter == 1 %}
+                                        <th bgcolor="#7fffd4">0 0</th>
+                                    {% elif forloop.counter == 2 %}
+                                        <th bgcolor="#7fffd4">0 1</th>
+                                    {% elif forloop.counter == 3 %}
+                                        <th bgcolor="#7fffd4">1 1</th>
+                                    {% elif forloop.counter == 4 %}
+                                        <th bgcolor="#7fffd4">1 0</th>
+                                    {% endif %}
+                                    {% for el in row %}
+                                        <td align="center">{{ el }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+</html>
