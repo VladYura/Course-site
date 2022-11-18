@@ -2,6 +2,7 @@ from course.brain.main import stage1
 from course.brain.input_data import input_addictions
 
 number = ''
+Y = ''
 
 
 def logic(q1, q2):
@@ -33,27 +34,50 @@ def create_input_tree(data, addictions):
     return out_lst
 
 
+# Qt4x8 = [
+#     [0, 0, 0, 0],
+#     [0, 0, 0, 1],
+#     [0, 0, 1, 0],
+#     [0, 0, 1, 1],
+#     [0, 1, 0, 0],
+#     [0, 1, 0, 1],
+#     [0, 1, 1, 0],
+#     [0, 1, 1, 1],
+#     [1, 0, 0, 0]
+# ]
+
 Qt4x8 = [
     [0, 0, 0, 0],
-    [0, 0, 0, 1],
-    [0, 0, 1, 0],
-    [0, 0, 1, 1],
     [0, 1, 0, 0],
-    [0, 1, 0, 1],
+    [0, 0, 0, 1],
     [0, 1, 1, 0],
-    [0, 1, 1, 1],
-    [1, 0, 0, 0]
+    [0, 1, 0, 1],
+    [0, 0, 1, 1],
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+    [0, 1, 1, 1]
 ]
+
+# Qt4x4 = [
+#     [0, 0, 0],
+#     [0, 0, 1],
+#     [0, 1, 0],
+#     [0, 1, 1],
+#     [1, 0, 0],
+#     [1, 0, 1],
+#     [1, 1, 0],
+#     [1, 1, 1]
+# ]
 
 Qt4x4 = [
     [0, 0, 0],
-    [0, 0, 1],
-    [0, 1, 0],
-    [0, 1, 1],
     [1, 0, 0],
+    [0, 0, 1],
     [1, 0, 1],
     [1, 1, 0],
-    [1, 1, 1]
+    [0, 1, 1],
+    [1, 1, 1],
+    [0, 1, 0],
 ]
 
 
@@ -102,8 +126,10 @@ def choice_qt(table):
     return Qt
 
 
-# Qt0 = create_q(sort(table), 0, write_condition(table))
-# Qt1 = create_q(sort(table), 1, write_condition(table))
+def add_a(table, q):
+    for i in range(len(table)):
+        q[i].append(table[i][0])
+    return q
 
 
 def create_jump_table(q, q0, q1):
@@ -140,41 +166,88 @@ def create_map_carno(list_out):
     return out
 
 
-def refactor_map_carno_4x8(res_list, letter):
+# def refactor_map_carno_4x8(res_list, letter):
+#     map = create_map_carno(res_list)
+#     index_i = [0, 1, 3, 2]
+#     index_j = [0, 1, 3, 2, 7, 6, 4, 5]
+#     count = 0
+#     num_lst = 0
+#
+#     for i in index_i:
+#         if count == 16:
+#             count = 0
+#             num_lst = 1
+#         for j in index_j:
+#             try:
+#                 map[i][j] = res_list[num_lst][count][letter]
+#                 count += 1
+#             except IndexError:
+#                 map[i][j] = 'x'
+#                 count += 1
+#     return map
+
+
+def refactor_map_carno_4x8_with_grey(res_list, letter):
     map = create_map_carno(res_list)
     index_i = [0, 1, 3, 2]
-    index_j = [0, 1, 3, 2, 7, 6, 4, 5]
+    index_j = [0, 7, 1, 4, 6, 2, 1, 0, 5]
     count = 0
     num_lst = 0
+    print(res_list)
 
-    for i in index_i:
-        if count == 16:
+    for i in index_i[::2]:
+        if count == 9:
             count = 0
             num_lst = 1
         for j in index_j:
-            try:
-                map[i][j] = res_list[num_lst][count][letter]
+            if count == 6 or count == 7:
+                map[index_i[index_i.index(i) + 1]][j] = res_list[num_lst][count][letter]
                 count += 1
-            except IndexError:
-                map[i][j] = 'x'
+            else:
+                map[i][j] = res_list[num_lst][count][letter]
                 count += 1
     return map
 
 
-def refactor_map_carno4x4(res_list, letter):
+# def refactor_map_carno4x4(res_list, letter):
+#     map = create_map_carno(res_list)
+#     index = [0, 1, 3, 2]
+#     count = 0
+#     num_list = 0
+#
+#     for i in index:
+#         if count == 8:
+#             count = 0
+#             num_list = 1
+#         for j in index:
+#             map[i][j] = res_list[num_list][count][letter]
+#             count += 1
+#
+#     return map
+
+
+def refactor_map_carno4x4_with_grey(res_list, letter):
     map = create_map_carno(res_list)
-    index = [0, 1, 3, 2]
+    index_i = [0, 1, 3, 2]
+    index_j = [0, 0, 1, 1, 3, 2, 2, 3]
     count = 0
     num_list = 0
 
-    for i in index:
+    for i in index_i[::2]:
         if count == 8:
             count = 0
             num_list = 1
-        for j in index:
-            map[i][j] = res_list[num_list][count][letter]
-            count += 1
-
+        for j in index_j:
+            if count in [1, 3, 4, 6]:
+                map[index_i[index_i.index(i) + 1]][j] = res_list[num_list][count][letter]
+                print(
+                    f'map[{index_i[index_i.index(i) + 1]}][{j}] = {res_list[num_list][count][letter]} count = {count}')
+                count += 1
+            else:
+                map[i][j] = res_list[num_list][count][letter]
+                print(
+                    f'map[{i}][{j}] = {res_list[num_list][count][letter]} count = {count}')
+                count += 1
     return map
 
 
@@ -203,6 +276,7 @@ def create_output_definition_table(q, q0, q1, table):
 
     for i in range(len(table)):
         lst = [
+            f'{table[i][0]}',
             '   '.join([str(x) for x in q[i]]),
             '   '.join([str(x) for x in q0[i]]),
             '   '.join([str(x) for x in q1[i]]),
@@ -222,10 +296,10 @@ def create_output_maps_carno(q, q0, q1, res_list):
     JK = []
 
     if len(res_list) == 8:
-        refactor_func = refactor_map_carno4x4
+        refactor_func = refactor_map_carno4x4_with_grey
         type_of_map = True
     else:
-        refactor_func = refactor_map_carno_4x8
+        refactor_func = refactor_map_carno_4x8_with_grey
         type_of_map = False
 
     for i in range(len(out)):
@@ -243,6 +317,6 @@ def create_output_maps_carno(q, q0, q1, res_list):
                 print(*j)
             print()
 
-    return [type_of_map, JK]
+    return type_of_map, JK
 
 # main_func(Qt, Qt0, Qt1, table)

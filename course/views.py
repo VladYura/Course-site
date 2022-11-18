@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from course.brain.stage_two import *
 from django.contrib.auth.decorators import login_required
-from course.brain.main import all_tables, all_dicts
+from course.brain.main import all_tables
 
 
 @login_required
@@ -58,12 +58,12 @@ def result(request):
 
     finish_jump_table = create_output_definition_table(Qt, Qt0, Qt1, finish_table_stage1)
 
-    maps_carno = create_output_maps_carno(Qt, Qt0, Qt1, finish_table_stage1)
+    type_of_map, maps_carno = create_output_maps_carno(Qt, Qt0, Qt1, finish_table_stage1)
 
     return render(request, 'result.html', {'last_table': last_table,
                                            'all_table': all_table,
                                            'first_table': first_table,
                                            'length_q': length_q,
                                            'finish_jump_table': finish_jump_table,
-                                           'maps_carno': maps_carno[1],
-                                           'type_of_map': maps_carno[0]})
+                                           'maps_carno': maps_carno,
+                                           'type_of_map': type_of_map})

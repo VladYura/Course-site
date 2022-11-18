@@ -1,14 +1,12 @@
 from course.brain.functions import *
 
 all_tables = []
-all_dicts = []
 
 
 # Главная функция скрипта
 # Запускает все остальные функции в нужном порядке нужное количество раз
 def stage1(names, start):
     global all_tables
-    global all_dicts
 
     letters = ['C', 'D', 'E', 'F']
 

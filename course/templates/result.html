@@ -1,9 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Результаты</title>
     <script type="text/javascript" src="{% static 'js/ECOTree.js' %}"></script>
     <link type="text/css" rel="style-sheet" href="{% static 'css/ECOTree.css' %}"/>
     <!-- CSS only -->
@@ -21,6 +21,9 @@
     </style>
 </head>
 <body>
+<div class="container">
+    <a class="btn btn-lg btn-primary border rounded mt-3" href="{% url 'home' %}">Вернуться назад</a>
+</div>
 <div style="display: flex; justify-content: center; flex-direction: column; align-items: center">
     <table border="1" cellpadding="10px" style="margin: 10px 0 auto" class="table-bordered">
         <caption><h2>Таблица исходного дерева</h2></caption>
@@ -114,6 +117,7 @@
     <table border="1" cellpadding="10px" style="margin: 50px 0 auto" class="table-bordered">
         <caption><h2>Таблица определения выходов триггеров</h2></caption>
         <tr align="center" bgcolor="#7fffd4">
+            <th rowspan="3">a<span class="index">i</span></th>
             <th>a<span class="index">(t)</span></th>
             <th>a<span class="index">(t + 1)</span></th>
             <th>a<span class="index">(t + 1)</span></th>
@@ -200,7 +204,11 @@
                                         <th bgcolor="#7fffd4">1 0</th>
                                     {% endif %}
                                     {% for el in row %}
-                                        <td align="center">{{ el }}</td>
+                                        {% if el == 1 %}
+                                            <td bgcolor="#7aff7d" align="center">{{ el }}</td>
+                                        {% else %}
+                                            <td align="center">{{ el }}</td>
+                                        {% endif %}
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
@@ -249,7 +257,11 @@
                                         <th bgcolor="#7fffd4">1 0</th>
                                     {% endif %}
                                     {% for el in row %}
-                                        <td align="center">{{ el }}</td>
+                                        {% if el == 1 %}
+                                            <td bgcolor="#7aff7d" align="center">{{ el }}</td>
+                                        {% else %}
+                                            <td align="center">{{ el }}</td>
+                                        {% endif %}
                                     {% endfor %}
                                 </tr>
                             {% endfor %}
